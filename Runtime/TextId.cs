@@ -68,6 +68,8 @@ namespace Kogane
         //================================================================================
         // 関数(static)
         //================================================================================
+        public static implicit operator string( TextId textId ) => textId.Value;
+
         public static bool operator ==( TextId left, TextId right ) => left.Key == right.Key;
         public static bool operator !=( TextId left, TextId right ) => left.Key != right.Key;
     }
