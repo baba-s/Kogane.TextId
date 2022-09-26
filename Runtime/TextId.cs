@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,7 +56,12 @@ namespace Kogane
         /// <summary>
         /// TextId のテキストに書式を指定した文字列を返します
         /// </summary>
-        public string FormatWith<T1, T2, T3, T4>( T1 arg1, T2 arg2, T3 arg3, T4 arg4 ) => Formatter.Format( Value, arg1, arg2, arg3, arg4 );
+        public string FormatWith<T1, T2, T3, T4>( T1 arg1, T2 arg2, T3 arg3, T4 arg4 ) =>
+            Formatter.Format
+            (
+                Value, arg1, arg2, arg3,
+                arg4
+            );
 
         public bool Equals( TextId    other ) => EqualityComparer<string>.Default.Equals( Key, other.Key );
         public int  CompareTo( TextId other ) => string.Compare( Key, other.Key, StringComparison.Ordinal );
