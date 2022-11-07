@@ -18,10 +18,15 @@ namespace Kogane
         [SerializeField] private string m_key;
 
         //================================================================================
+        // 変数
+        //================================================================================
+        private bool m_isFormatWith;
+
+        //================================================================================
         // プロパティ
         //================================================================================
         public string Key   => m_key;
-        public string Value => OnFind?.Invoke( this ) ?? m_key;
+        public string Value => m_isFormatWith ? m_key : OnFind?.Invoke( this ) ?? m_key;
 
         //================================================================================
         // プロパティ(static)
@@ -36,31 +41,48 @@ namespace Kogane
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public TextId( string key ) => m_key = key;
+        public TextId( string key ) : this( key, false )
+        {
+        }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        private TextId( string key, bool isFormatWith )
+        {
+            m_key          = key;
+            m_isFormatWith = isFormatWith;
+        }
 
         /// <summary>
         /// TextId のテキストに書式を指定した文字列を返します
         /// </summary>
-        public string FormatWith<T>( T arg1 ) => Formatter.Format( Value, arg1 );
+        public TextId FormatWith<T>( T arg1 ) => new( Formatter.Format( Value, arg1 ), true );
 
         /// <summary>
         /// TextId のテキストに書式を指定した文字列を返します
         /// </summary>
-        public string FormatWith<T1, T2>( T1 arg1, T2 arg2 ) => Formatter.Format( Value, arg1, arg2 );
+        public TextId FormatWith<T1, T2>( T1 arg1, T2 arg2 ) => new( Formatter.Format( Value, arg1, arg2 ), true );
 
         /// <summary>
         /// TextId のテキストに書式を指定した文字列を返します
         /// </summary>
-        public string FormatWith<T1, T2, T3>( T1 arg1, T2 arg2, T3 arg3 ) => Formatter.Format( Value, arg1, arg2, arg3 );
+        public TextId FormatWith<T1, T2, T3>( T1 arg1, T2 arg2, T3 arg3 ) => new( Formatter.Format( Value, arg1, arg2, arg3 ), true );
 
         /// <summary>
         /// TextId のテキストに書式を指定した文字列を返します
         /// </summary>
-        public string FormatWith<T1, T2, T3, T4>( T1 arg1, T2 arg2, T3 arg3, T4 arg4 ) =>
-            Formatter.Format
+        public TextId FormatWith<T1, T2, T3, T4>( T1 arg1, T2 arg2, T3 arg3, T4 arg4 ) =>
+            new
             (
-                Value, arg1, arg2, arg3,
-                arg4
+                Formatter.Format
+                (
+                    Value,
+                    arg1,
+                    arg2,
+                    arg3,
+                    arg4
+                ), true
             );
 
         public bool Equals( TextId    other ) => EqualityComparer<string>.Default.Equals( Key, other.Key );
@@ -68,7 +90,7 @@ namespace Kogane
 
         public override bool   Equals( object other ) => other is TextId result && Equals( result );
         public override int    GetHashCode()          => EqualityComparer<string>.Default.GetHashCode( Key );
-        public override string ToString()             => Key;
+        public override string ToString()             => Value;
 
         //================================================================================
         // 関数(static)
